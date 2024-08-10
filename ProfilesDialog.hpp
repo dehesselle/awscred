@@ -18,6 +18,12 @@ public:
     ProfilesDialog(QWidget *parent = nullptr);
     ~ProfilesDialog();
 
+    void populate();
+    void addButton(const QString &profile);
+
+public slots:
+    void updateProfile(const QString &profile);
+
 private:
     void createTrayIcon();
 
