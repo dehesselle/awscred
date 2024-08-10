@@ -1,6 +1,7 @@
 #ifndef PROFILESDIALOG_HPP
 #define PROFILESDIALOG_HPP
 
+#include <QAction>
 #include <QDialog>
 
 QT_BEGIN_NAMESPACE
@@ -18,6 +19,8 @@ public:
     ~ProfilesDialog();
 
 private:
+    void createTrayIcon();
+
     Ui::ProfilesDialog *ui;
 };
 #endif // PROFILESDIALOG_HPP

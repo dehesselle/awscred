@@ -2,6 +2,8 @@
 
 #include <QApplication>
 #include <QLocale>
+#include <QMessageBox>
+#include <QSystemTrayIcon>
 #include <QTranslator>
 #include <stdio.h>
 #include <stdlib.h>
@@ -27,7 +29,7 @@ int main(int argc, char *argv[])
 {
     originalHandler = qInstallMessageHandler(logToFile);
     qSetMessagePattern(MESSAGE_PATTERN);
-    qDebug("started");
+    qDebug("begin log");
 
     QApplication a(argc, argv);
 
@@ -40,7 +42,19 @@ int main(int argc, char *argv[])
             break;
         }
     }
-    ProfilesDialog w;
-    w.show();
-    return a.exec();
+
+    if (QSystemTrayIcon::isSystemTrayAvailable()) {
+        QApplication::setQuitOnLastWindowClosed(false);
+
+        ProfilesDialog w;
+        w.show();
+        return a.exec();
+    } else {
+        QMessageBox::critical(nullptr,
+                              QObject::tr("system tray"),
+                              QObject::tr("System tray not found!"),
+                              QMessageBox::Close);
+        qCritical("system tray not found");
+        return 1;
+    }
 }
