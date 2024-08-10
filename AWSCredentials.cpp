@@ -3,28 +3,18 @@
 #include <QTemporaryFile>
 #include <QTextStream>
 
-
-AWSCredentials::AWSCredentials()
+AWSCredentials::AWSCredentials(QObject *parent)
+    : QObject(parent)
 {
     auto filename = QStandardPaths::writableLocation(QStandardPaths::HomeLocation)
                     + "/.aws/credentials";
-    iniFile = new QSettings(filename, QSettings::IniFormat);
+    iniFile = new QSettings(filename, QSettings::IniFormat, this);
     sync();
 }
 
 void AWSCredentials::sync()
 {
     iniFile->sync();
-}
-
-void AWSCredentials::readFromFile()
-{
-    int zero;
-}
-
-AWSCredentials::~AWSCredentials()
-{
-    delete iniFile;
 }
 
 int AWSCredentials::count()

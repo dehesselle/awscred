@@ -4,12 +4,12 @@
 #include <QSettings>
 #include <QStringList>
 
-class AWSCredentials
+class AWSCredentials : public QObject
 {
+    Q_OBJECT
+
 public:
-    AWSCredentials();
-    ~AWSCredentials();
-    void readFromFile();
+    AWSCredentials(QObject *parent = nullptr);
 
     void sync();
     int count();
