@@ -47,7 +47,6 @@ int main(int argc, char *argv[])
         QApplication::setQuitOnLastWindowClosed(false);
 
         ProfilesDialog w;
-        w.show();
         return a.exec();
     } else {
         QMessageBox::critical(nullptr,

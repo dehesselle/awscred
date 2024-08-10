@@ -1,8 +1,10 @@
 #include "ProfilesDialog.hpp"
 #include <QAction>
+#include <QClipboard>
 #include <QFont>
 #include <QIcon>
 #include <QMenu>
+#include <QMessageBox>
 #include <QPushButton>
 #include <QSystemTrayIcon>
 #include <QtDebug>
@@ -16,6 +18,10 @@ ProfilesDialog::ProfilesDialog(QWidget *parent)
     ui->setupUi(this);
     populate();
     createTrayIcon();
+    connect(QApplication::clipboard(),
+            &QClipboard::dataChanged,
+            this,
+            &ProfilesDialog::parseClipboard);
 }
 
 ProfilesDialog::~ProfilesDialog()
@@ -73,9 +79,24 @@ void ProfilesDialog::createTrayIcon()
 void ProfilesDialog::updateProfile(const QString &profile)
 {
     auto credentials = AWSCredentials();
-    credentials.setProfileFromText(
-        profile,
-        "[default]\naws_access_key=hans\naws_secret_access_key=peter\naws_session_token=blub\n");
+    if (credentials.setProfileFromText(profile, QApplication::clipboard()->text())) {
+        hide();
+        qInfo() << "profile updated: " << profile;
+    } else {
+        QMessageBox::critical(this,
+                              QObject::tr("update profile"),
+                              QObject::tr("Failed to update profile.\nNo changes have been made."),
+                              QMessageBox::Close);
+    }
+}
 
-    qInfo() << "update profile: " << profile;
+void ProfilesDialog::parseClipboard()
+{
+    qDebug() << __FUNCTION__;
+    auto text = QApplication::clipboard()->text();
+
+    if (AWSCredentials::containsCredentials(text)) {
+        populate();
+        show();
+    }
 }
