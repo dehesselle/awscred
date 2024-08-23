@@ -1,4 +1,5 @@
 #include "AWSCredentials.hpp"
+#include <QDir>
 #include <QStandardPaths>
 #include <QTemporaryFile>
 #include <QTextStream>
@@ -7,9 +8,14 @@
 AWSCredentials::AWSCredentials(QObject *parent)
     : QObject(parent)
 {
-    auto filename = QStandardPaths::writableLocation(QStandardPaths::HomeLocation)
-                    + "/.aws/credentials";
-    iniFile = new QSettings(filename, QSettings::IniFormat, this);
+    auto file = QDir(QStandardPaths::writableLocation(QStandardPaths::HomeLocation)
+                     + "/.aws/credentials");
+    if (file.exists())
+        qDebug() << "exists:" << file.path();
+    else
+        qDebug() << "missing:" << file.path();
+
+    iniFile = new QSettings(file.path(), QSettings::IniFormat, this);
     sync();
 }
 

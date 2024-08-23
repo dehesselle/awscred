@@ -1,6 +1,7 @@
 #include "ProfilesDialog.hpp"
 
 #include <QApplication>
+#include <QDir>
 #include <QLocale>
 #include <QMessageBox>
 #include <QStandardPaths>
@@ -18,8 +19,10 @@ auto MESSAGE_PATTERN = "[%{time yyyyMMdd h:mm:ss.zzz t} "
 void logToFile(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
     QString message = qFormatLogMessage(type, context, msg);
-    static FILE *f = fopen(qPrintable(QStandardPaths::writableLocation(QStandardPaths::TempLocation)
-                                      + "/awscred.log"),
+    static FILE *f = fopen(qPrintable(
+                               QDir(QStandardPaths::writableLocation(QStandardPaths::TempLocation)
+                                    + "/awscred.log")
+                                   .path()),
                            "a");
     fprintf(f, "%s\n", qPrintable(message));
     fflush(f);
