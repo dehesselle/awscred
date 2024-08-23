@@ -5,6 +5,7 @@
 #include <QIcon>
 #include <QMenu>
 #include <QMessageBox>
+#include <QPixmap>
 #include <QPushButton>
 #include <QSystemTrayIcon>
 #include <QtDebug>
@@ -70,7 +71,7 @@ void ProfilesDialog::createTrayIcon()
     });
     systrayIconMenu->addAction(quitAction);
 
-    QIcon *icon = new QIcon(":/icon.png");
+    QIcon *icon = new QIcon(QPixmap(":/icon.svg"));
     systrayIcon->setIcon(*icon);
 
     systrayIcon->show();
