@@ -12,9 +12,9 @@
 
 // https://doc.qt.io/qt-6/qtlogging.html
 QtMessageHandler originalHandler = nullptr;
-auto MESSAGE_PATTERN = "[%{time yyyyMMdd h:mm:ss.zzz t} "
-                       "%{if-debug}D%{endif}%{if-info}I%{endif}%{if-warning}W%{endif}%{if-"
-                       "critical}C%{endif}%{if-fatal}F%{endif}] %{file}:%{line} - %{message}";
+auto MESSAGE_PATTERN = "%{time yyMMdd-hmmss} | "
+                       "%{if-debug}DBUG%{endif}%{if-info}INFO%{endif}%{if-warning}WARN%{endif}%{if-"
+                       "critical}CRIT%{endif}%{if-fatal}FATL%{endif} | %{function} | %{message}";
 
 void logToFile(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
