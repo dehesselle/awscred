@@ -11,7 +11,7 @@
 #include <stdlib.h>
 
 // https://doc.qt.io/qt-6/qtlogging.html
-QtMessageHandler originalHandler = nullptr;
+QtMessageHandler ORIGINAL_HANDLER = nullptr;
 auto MESSAGE_PATTERN = "%{time yyMMdd-hmmss} | "
                        "%{if-debug}DBUG%{endif}%{if-info}INFO%{endif}%{if-warning}WARN%{endif}%{if-"
                        "critical}CRIT%{endif}%{if-fatal}FATL%{endif} | %{function} | %{message}";
@@ -27,13 +27,13 @@ void logToFile(QtMsgType type, const QMessageLogContext &context, const QString 
     fprintf(f, "%s\n", qPrintable(message));
     fflush(f);
 
-    if (originalHandler)
-        originalHandler(type, context, msg);
+    if (ORIGINAL_HANDLER)
+        ORIGINAL_HANDLER(type, context, msg);
 }
 
 int main(int argc, char *argv[])
 {
-    originalHandler = qInstallMessageHandler(logToFile);
+    ORIGINAL_HANDLER = qInstallMessageHandler(logToFile);
     qSetMessagePattern(MESSAGE_PATTERN);
     qDebug("begin log");
 
