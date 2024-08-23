@@ -1,0 +1,38 @@
+name: Build
+on:
+  push:   # do not run for tags
+    branches:
+      - '*'
+jobs:
+
+################################################################################
+
+  awscred:
+    runs-on: windows-2022
+    steps:
+
+      #----------------------------------------------------------------- prepare
+
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: 6.7.2
+          setup-python: false
+
+      - name: Install MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Build application
+        run: |
+          cmake -S. -Bbuild
+          msbuild build/awscred.sln /p:Configuration=Release
+          windeployqt build/Release/awscred.exe
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: awscred
+          path: build/Release/*
