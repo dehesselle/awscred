@@ -3,6 +3,7 @@
 #include <QApplication>
 #include <QLocale>
 #include <QMessageBox>
+#include <QStandardPaths>
 #include <QSystemTrayIcon>
 #include <QTranslator>
 #include <stdio.h>
@@ -17,7 +18,9 @@ auto MESSAGE_PATTERN = "[%{time yyyyMMdd h:mm:ss.zzz t} "
 void logToFile(QtMsgType type, const QMessageLogContext &context, const QString &msg)
 {
     QString message = qFormatLogMessage(type, context, msg);
-    static FILE *f = fopen("/tmp/log.txt", "a");
+    static FILE *f = fopen(qPrintable(QStandardPaths::writableLocation(QStandardPaths::TempLocation)
+                                      + "/awscred.log"),
+                           "a");
     fprintf(f, "%s\n", qPrintable(message));
     fflush(f);
 
