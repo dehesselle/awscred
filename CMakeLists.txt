@@ -12,13 +12,13 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets LinguistTools)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets LinguistTools)
 
-set(TS_FILES awscred_de_DE.ts)
+set(TS_FILES i18n/awscred_de_DE.ts)
 
 set(PROJECT_SOURCES
-        main.cpp
-        ProfilesDialog.cpp
-        ProfilesDialog.hpp
-        ProfilesDialog.ui
+        src/main.cpp
+        src/ProfilesDialog.cpp
+        src/ProfilesDialog.hpp
+        src/ProfilesDialog.ui
         ${TS_FILES}
 )
 
@@ -26,8 +26,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     qt_add_executable(awscred
         MANUAL_FINALIZATION
         ${PROJECT_SOURCES}
-        AWSCredentials.cpp AWSCredentials.hpp
-        awscred.qrc
+        src/AWSCredentials.cpp src/AWSCredentials.hpp
+        res/awscred.qrc
     )
 # Define target properties for Android with Qt 6 as:
 #    set_property(TARGET awscred APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR

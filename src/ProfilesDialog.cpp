@@ -70,7 +70,7 @@ void ProfilesDialog::createTrayIcon()
     });
     systrayIconMenu->addAction(quitAction);
 
-    QIcon *icon = new QIcon(":/resources/icon.png");
+    QIcon *icon = new QIcon(":/icon.png");
     systrayIcon->setIcon(*icon);
 
     systrayIcon->show();
