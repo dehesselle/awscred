@@ -10,8 +10,8 @@
 #include <QPushButton>
 #include <QSystemTrayIcon>
 #include <QtDebug>
-#include "./ui_ProfilesDialog.h"
 #include "AWSCredentials.hpp"
+#include "src/ui_ProfilesDialog.h"
 
 ProfilesDialog::ProfilesDialog(QWidget *parent)
     : QDialog(parent)
