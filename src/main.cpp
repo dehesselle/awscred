@@ -4,6 +4,7 @@
 #include <QDir>
 #include <QLocale>
 #include <QMessageBox>
+#include <QSharedMemory>
 #include <QStandardPaths>
 #include <QSystemTrayIcon>
 #include <QTranslator>
@@ -52,8 +53,14 @@ int main(int argc, char *argv[])
     if (QSystemTrayIcon::isSystemTrayAvailable()) {
         QApplication::setQuitOnLastWindowClosed(false);
 
-        ProfilesDialog w;
-        return a.exec();
+        QSharedMemory shared("7df53930-074b-43a3-be84-4be1ecf642b5"); // uuidgen
+        if (shared.create(512, QSharedMemory::ReadWrite)) {
+            ProfilesDialog w;
+            return a.exec();
+        } else {
+            qCritical("only one application instance allowed");
+            return 1;
+        }
     } else {
         QMessageBox::critical(nullptr,
                               QObject::tr("system tray"),
