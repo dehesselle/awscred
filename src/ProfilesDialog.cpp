@@ -3,6 +3,7 @@
 #include <QClipboard>
 #include <QFont>
 #include <QIcon>
+#include <QInputDialog>
 #include <QMenu>
 #include <QMessageBox>
 #include <QPixmap>
@@ -84,17 +85,22 @@ void ProfilesDialog::createTrayIcon()
     });
     systrayIconMenu->addAction(quitAction);
 
-#ifdef QT_DEBUG
-    // for debugging only: click the systray icon to show the dialog
+    // click systray icon to show dialog in read-only mode
+    // (read-only is for non-debug builds only)
     connect(systrayIcon,
             &QSystemTrayIcon::activated,
             this,
             [this](QSystemTrayIcon::ActivationReason reason) {
                 if (QSystemTrayIcon::Trigger == reason) {
+#ifndef QT_DEBUG
+                    this->ui->saProfiles->setDisabled(true);
+                    this->ui->pbNew->setDisabled(true);
+#endif
+                    this->ui->lblDescription->setText(
+                        tr("The following profiles have been found."));
                     this->show();
                 }
             });
-#endif
 
     QIcon *icon = new QIcon(QPixmap(":/icon.svg"));
     systrayIcon->setIcon(*icon);
@@ -102,18 +108,23 @@ void ProfilesDialog::createTrayIcon()
     systrayIcon->show();
 }
 
-void ProfilesDialog::updateProfile(const QString &profile)
+bool ProfilesDialog::updateProfile(const QString &profile)
 {
+    bool result = false;
+
     auto credentials = AWSCredentials();
     if (credentials.setProfileFromText(profile, QApplication::clipboard()->text())) {
         hide();
-        qInfo() << "profile updated: " << profile;
+        qInfo() << "update profile" << profile;
+        result = true;
     } else {
         QMessageBox::critical(this,
                               QObject::tr("update profile"),
                               QObject::tr("Failed to update profile.\nNo changes have been made."),
                               QMessageBox::Close);
     }
+
+    return result;
 }
 
 void ProfilesDialog::parseClipboard()
@@ -123,6 +134,32 @@ void ProfilesDialog::parseClipboard()
 
     if (AWSCredentials::containsCredentials(text)) {
         populate();
+        ui->saProfiles->setDisabled(false);
+        ui->pbNew->setDisabled(false);
+        ui->lblDescription->setText(tr("Which profile do you want to update?"));
         show();
+    }
+}
+
+void ProfilesDialog::on_pbClose_clicked()
+{
+    this->hide();
+}
+
+void ProfilesDialog::on_pbNew_clicked()
+{
+    bool isOk = false;
+    QString profile = QInputDialog::getText(this,
+                                            tr("create new profile"),
+                                            tr("profile name:"),
+                                            QLineEdit::Normal,
+                                            "",
+                                            &isOk);
+
+    if (isOk and not profile.isEmpty()) {
+        qInfo() << "new profile" << profile;
+        if (updateProfile(profile)) {
+            populate();
+        }
     }
 }

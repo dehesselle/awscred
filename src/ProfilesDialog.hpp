@@ -22,9 +22,13 @@ public:
     void addButton(const QString &profile);
 
 public slots:
-    void updateProfile(const QString &profile);
+    bool updateProfile(const QString &profile);
     void parseClipboard();
     void showAboutDialog();
+
+private slots:
+    void on_pbClose_clicked();
+    void on_pbNew_clicked();
 
 private:
     void createTrayIcon();
