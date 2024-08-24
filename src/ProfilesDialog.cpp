@@ -58,11 +58,24 @@ void ProfilesDialog::addButton(const QString &profile)
     ui->saProfiles->widget()->layout()->addWidget(button);
 }
 
+void ProfilesDialog::showAboutDialog()
+{
+    QMessageBox::about(this,
+                       "AWS Credential Helper",
+                       "This tool monitors your clipboard for AWS credentials and offers to\n"
+                       "update/create a profile in your ~/.aws/credentials file.\n\n"
+                       "https://github.com/dehesselle/awscred");
+}
+
 void ProfilesDialog::createTrayIcon()
 {
     QMenu *systrayIconMenu = new QMenu(this);
     QSystemTrayIcon *systrayIcon = new QSystemTrayIcon(this);
     systrayIcon->setContextMenu(systrayIconMenu);
+
+    QAction *aboutAction = new QAction(tr("About"), this);
+    connect(aboutAction, &QAction::triggered, this, &ProfilesDialog::showAboutDialog);
+    systrayIconMenu->addAction(aboutAction);
 
     QAction *quitAction = new QAction(tr("&Quit"), this);
     connect(quitAction, &QAction::triggered, qApp, []() {

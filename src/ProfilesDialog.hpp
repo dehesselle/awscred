@@ -24,6 +24,7 @@ public:
 public slots:
     void updateProfile(const QString &profile);
     void parseClipboard();
+    void showAboutDialog();
 
 private:
     void createTrayIcon();
