@@ -84,6 +84,18 @@ void ProfilesDialog::createTrayIcon()
     });
     systrayIconMenu->addAction(quitAction);
 
+#ifdef QT_DEBUG
+    // for debugging only: click the systray icon to show the dialog
+    connect(systrayIcon,
+            &QSystemTrayIcon::activated,
+            this,
+            [this](QSystemTrayIcon::ActivationReason reason) {
+                if (QSystemTrayIcon::Trigger == reason) {
+                    this->show();
+                }
+            });
+#endif
+
     QIcon *icon = new QIcon(QPixmap(":/icon.svg"));
     systrayIcon->setIcon(*icon);
 
