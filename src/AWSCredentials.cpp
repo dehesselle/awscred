@@ -8,14 +8,14 @@
 AWSCredentials::AWSCredentials(QObject *parent)
     : QObject(parent)
 {
-    auto file = QDir(QStandardPaths::writableLocation(QStandardPaths::HomeLocation)
-                     + "/.aws/credentials");
-    if (file.exists())
-        qDebug() << "exists:" << file.path();
+    auto awsDir = QDir(QStandardPaths::writableLocation(QStandardPaths::HomeLocation)
+                     + "/.aws");
+    if (awsDir.exists("credentials"))
+        qDebug() << "credentials file found in" << awsDir.path();
     else
-        qDebug() << "missing:" << file.path();
+        qDebug() << "no credentials file";
 
-    iniFile = new QSettings(file.path(), QSettings::IniFormat, this);
+    iniFile = new QSettings(awsDir.filePath("credentials"), QSettings::IniFormat, this);
     sync();
 }
 

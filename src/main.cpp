@@ -21,9 +21,8 @@ void logToFile(QtMsgType type, const QMessageLogContext &context, const QString 
 {
     QString message = qFormatLogMessage(type, context, msg);
     static FILE *f = fopen(qPrintable(
-                               QDir(QStandardPaths::writableLocation(QStandardPaths::TempLocation)
-                                    + "/awscred.log")
-                                   .path()),
+                               QDir(QStandardPaths::writableLocation(QStandardPaths::TempLocation))
+                                   .filePath("awscred.log")),
                            "a");
     fprintf(f, "%s\n", qPrintable(message));
     fflush(f);
