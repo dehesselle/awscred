@@ -27,8 +27,12 @@ void logToFile(QtMsgType type, const QMessageLogContext &context, const QString 
     fprintf(f, "%s\n", qPrintable(message));
     fflush(f);
 
+    // Disable the original handler for non-debug builds.
+    // (Original handler prints to console.)
+#ifdef QT_DEBUG
     if (ORIGINAL_HANDLER)
         ORIGINAL_HANDLER(type, context, msg);
+#endif
 }
 
 int main(int argc, char *argv[])
