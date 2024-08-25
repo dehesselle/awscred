@@ -20,13 +20,10 @@ jobs:
           version: 6.7.2
           setup-python: false
 
-      - name: Install MSBuild
-        uses: microsoft/setup-msbuild@v2
-
       - name: Build application
         run: |
-          cmake -S. -Bbuild
-          msbuild build/awscred.sln /p:Configuration=Release
+          cmake -S . -B build
+          cmake --build build --config Release
           windeployqt build/Release/awscred.exe
 
       - name: Upload artifact
