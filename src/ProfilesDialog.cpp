@@ -18,6 +18,7 @@ ProfilesDialog::ProfilesDialog(QWidget *parent)
     , ui(new Ui::ProfilesDialog)
 {
     ui->setupUi(this);
+    setWindowIcon(QIcon(QPixmap(":/icon.svg")));
     populate();
     createTrayIcon();
     connect(QApplication::clipboard(),
