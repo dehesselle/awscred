@@ -8,6 +8,7 @@
 #include <QStandardPaths>
 #include <QSystemTrayIcon>
 #include <QTranslator>
+#include <private/qguiapplication_p.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -58,6 +59,12 @@ int main(int argc, char *argv[])
 
         QSharedMemory shared("7df53930-074b-43a3-be84-4be1ecf642b5"); // uuidgen
         if (shared.create(512, QSharedMemory::ReadWrite)) {
+    #ifdef Q_OS_WIN
+            if (auto interface = qApp->nativeInterface<QNativeInterface::Private::QWindowsApplication>()) {
+                interface->setWindowActivationBehavior(QNativeInterface::Private::QWindowsApplication::AlwaysActivateWindow);
+            }
+#endif
+
             ProfilesDialog w;
             return a.exec();
         } else {

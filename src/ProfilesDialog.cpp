@@ -139,6 +139,7 @@ void ProfilesDialog::parseClipboard()
         ui->pbNew->setDisabled(false);
         ui->lblDescription->setText(tr("Which profile do you want to update?"));
         show();
+        activateWindow();
     }
 }
 
