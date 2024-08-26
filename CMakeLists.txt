@@ -1,3 +1,7 @@
+# SPDX-FileCopyrightText: 2024 René de Hesselle <dehesselle@web.de>
+#
+# SPDX-License-Identifier: GPL-2.0-or-later
+
 cmake_minimum_required(VERSION 3.16)
 
 project(awscred VERSION 0.1 LANGUAGES CXX)
