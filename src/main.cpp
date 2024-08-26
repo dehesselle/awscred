@@ -44,7 +44,7 @@ int main(int argc, char *argv[])
 {
     ORIGINAL_HANDLER = qInstallMessageHandler(logToFile);
     qSetMessagePattern(MESSAGE_PATTERN);
-    qDebug("begin log");
+    qInfo("begin log");
 
     QApplication a(argc, argv);
 

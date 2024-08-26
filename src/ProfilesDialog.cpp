@@ -87,7 +87,7 @@ void ProfilesDialog::createTrayIcon()
 
     QAction *quitAction = new QAction(tr("&Quit"), this);
     connect(quitAction, &QAction::triggered, qApp, []() {
-        qDebug() << "quit requested";
+        qInfo() << "quit requested";
         QCoreApplication::quit();
     });
     systrayIconMenu->addAction(quitAction);
