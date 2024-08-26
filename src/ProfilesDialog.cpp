@@ -70,7 +70,9 @@ void ProfilesDialog::showAboutDialog()
                        "AWS Credential Helper",
                        "This tool monitors your clipboard for AWS credentials and offers to\n"
                        "update/create a profile in your ~/.aws/credentials file.\n\n"
-                       "https://github.com/dehesselle/awscred");
+                       "Sourcecode available: https://github.com/dehesselle/awscred\n"
+                       "Created using Qt."
+                       );
 }
 
 void ProfilesDialog::createTrayIcon()
