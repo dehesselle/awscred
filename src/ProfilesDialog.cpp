@@ -155,7 +155,7 @@ void ProfilesDialog::on_pbNew_clicked()
                                             tr("create new profile"),
                                             tr("profile name:"),
                                             QLineEdit::Normal,
-                                            "",
+                                            "default",
                                             &isOk);
 
     if (isOk and not profile.isEmpty()) {
