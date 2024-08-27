@@ -46,6 +46,11 @@ int main(int argc, char *argv[])
     qSetMessagePattern(MESSAGE_PATTERN);
     qInfo("begin log");
 
+// disable debug logging for non-debug builds
+#ifndef QT_DEBUG
+    QLoggingCategory::setFilterRules("*.debug=false\n");
+#endif
+
     QApplication a(argc, argv);
 
     QTranslator translator;
