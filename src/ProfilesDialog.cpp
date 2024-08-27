@@ -68,10 +68,12 @@ void ProfilesDialog::showAboutDialog()
 {
     QMessageBox::about(this,
                        "AWS Credential Helper",
-                       "This tool monitors your clipboard for AWS credentials and offers to\n"
-                       "update/create a profile in your ~/.aws/credentials file.\n\n"
-                       "Sourcecode available: https://github.com/dehesselle/awscred\n"
-                       "Created using Qt."
+                       "This tool monitors your clipboard for AWS credentials and offers\n"
+                       "to update/create a profile in your ~/.aws/credentials file.\n\n"
+                       "Licensed under GPL-2.0-or-later.\n"
+                       "https://github.com/dehesselle/awscred\n\n"
+                       "Created using Qt.\n"
+                       "https://qt.io"
                        );
 }
 
