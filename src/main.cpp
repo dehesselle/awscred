@@ -32,8 +32,7 @@ void logToFile(QtMsgType type, const QMessageLogContext &context, const QString 
     fprintf(f, "%s\n", qPrintable(message));
     fflush(f);
 
-    // Disable the original handler for non-debug builds.
-    // (Original handler prints to console.)
+// Do not log to console (in addition to file) for non-debug builds.
 #ifdef QT_DEBUG
     if (ORIGINAL_HANDLER)
         ORIGINAL_HANDLER(type, context, msg);
@@ -46,7 +45,7 @@ int main(int argc, char *argv[])
     qSetMessagePattern(MESSAGE_PATTERN);
     qInfo("begin log");
 
-// disable debug logging for non-debug builds
+// Disable debug logging for non-debug builds.
 #ifndef QT_DEBUG
     QLoggingCategory::setFilterRules("*.debug=false\n");
 #endif
@@ -68,7 +67,8 @@ int main(int argc, char *argv[])
 
         QSharedMemory shared("7df53930-074b-43a3-be84-4be1ecf642b5"); // uuidgen
         if (shared.create(512, QSharedMemory::ReadWrite)) {
-    #ifdef Q_OS_WIN
+// Force windows to always pop up in front of all others when calling activate().
+#ifdef Q_OS_WIN
             if (auto interface = qApp->nativeInterface<QNativeInterface::Private::QWindowsApplication>()) {
                 interface->setWindowActivationBehavior(QNativeInterface::Private::QWindowsApplication::AlwaysActivateWindow);
             }
