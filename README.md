@@ -8,7 +8,7 @@ This is a small tool (toy?) for me and my colleagues to ease up the task of havi
 
 ```plain
 [default]
-aws_access_key=bla
+aws_access_key_id=bla
 aws_secret_access_key=foo
 aws_session_token=bar
 ```

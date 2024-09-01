@@ -21,7 +21,7 @@ public:
     QStringList getProfiles();
     static bool containsCredentials(const QString &text);
 
-    void setAccessKey(const QString &profile, const QString &accessKey);
+    void setAccessKeyId(const QString &profile, const QString &accessKeyId);
     void setSecretAccessKey(const QString &profile, const QString &secretAccessKey);
     void setSessionToken(const QString &profile, const QString &sessionToken);
     bool setProfileFromText(const QString &profile, const QString &text);

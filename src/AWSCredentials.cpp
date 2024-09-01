@@ -39,9 +39,9 @@ QStringList AWSCredentials::getProfiles()
     return iniFile->childGroups();
 }
 
-void AWSCredentials::setAccessKey(const QString &profile, const QString &accessKey)
+void AWSCredentials::setAccessKeyId(const QString &profile, const QString &accessKeyId)
 {
-    iniFile->setValue(profile + "/aws_access_key", accessKey);
+    iniFile->setValue(profile + "/aws_access_key_id", accessKeyId);
 }
 
 void AWSCredentials::setSecretAccessKey(const QString &profile, const QString &secretAccessKey)
@@ -64,12 +64,12 @@ bool AWSCredentials::setProfileFromText(const QString &profile, const QString &t
         qDebug() << "tempfile is" << tempFile.fileName();
 
         auto tempSettings = QSettings(tempFile.fileName(), QSettings::IniFormat);
-        auto accessKey = tempSettings.value("default/aws_access_key").toString();
+        auto accessKeyId = tempSettings.value("default/aws_access_key_id").toString();
         auto secretAccessKey = tempSettings.value("default/aws_secret_access_key").toString();
         auto sessionToken = tempSettings.value("default/aws_session_token").toString();
 
-        if (accessKey.isEmpty() or secretAccessKey.isEmpty() or sessionToken.isEmpty()) {
-            qCritical() << "unable to update profile " << profile << ":" << accessKey.length()
+        if (accessKeyId.isEmpty() or secretAccessKey.isEmpty() or sessionToken.isEmpty()) {
+            qCritical() << "unable to update profile " << profile << ":" << accessKeyId.length()
                         << secretAccessKey.length() << sessionToken.length();
             // Do not remove temporary file in debug mode.
             if (qApp->property("debug").toBool()) {
@@ -78,7 +78,7 @@ bool AWSCredentials::setProfileFromText(const QString &profile, const QString &t
             return false;
         }
 
-        setAccessKey(profile, accessKey);
+        setAccessKeyId(profile, accessKeyId);
         setSecretAccessKey(profile, secretAccessKey);
         setSessionToken(profile, sessionToken);
         sync();
