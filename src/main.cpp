@@ -5,6 +5,7 @@
 #include "ProfilesDialog.hpp"
 
 #include <QApplication>
+#include <QCommandLineParser>
 #include <QDir>
 #include <QLocale>
 #include <QMessageBox>
@@ -33,11 +34,8 @@ void logToFile(QtMsgType type, const QMessageLogContext &context, const QString 
     fprintf(f, "%s\n", qPrintable(message));
     fflush(f);
 
-// Do not log to console (in addition to file) for non-debug builds.
-#ifdef QT_DEBUG
     if (ORIGINAL_HANDLER)
         ORIGINAL_HANDLER(type, context, msg);
-#endif
 }
 
 int main(int argc, char *argv[])
@@ -46,21 +44,29 @@ int main(int argc, char *argv[])
     qSetMessagePattern(MESSAGE_PATTERN);
     qInfo() << "begin log";
 
-// Disable debug logging for non-debug builds.
-// Override with
-//      QT_LOGGING_RULES="default.debug=true" /path/to/awscred
-#ifndef QT_DEBUG
-    QLoggingCategory::setFilterRules("*.debug=false\n");
-#endif
+    QApplication app(argc, argv);
 
-    QApplication a(argc, argv);
+    { // check if we should run in debug mode
+        QCommandLineParser parser;
+        parser.addPositionalArgument("debug", "run in debug mode");
+        parser.process(app);
+        if (parser.positionalArguments().contains("debug")) {
+            app.setProperty("debug", true);
+        } else {
+            app.setProperty("debug", false);
+            // Disable debug logging.
+            QLoggingCategory::setFilterRules("default.debug=false\n");
+            // Disable logging to console.
+            ORIGINAL_HANDLER = nullptr;
+        }
+    }
 
     QTranslator translator;
     const QStringList uiLanguages = QLocale::system().uiLanguages();
     for (const QString &locale : uiLanguages) {
         const QString baseName = "awscred_" + QLocale(locale).name();
         if (translator.load(":/i18n/" + baseName)) {
-            a.installTranslator(&translator);
+            app.installTranslator(&translator);
             break;
         }
     }
@@ -78,7 +84,7 @@ int main(int argc, char *argv[])
 #endif
 
             ProfilesDialog w;
-            return a.exec();
+            return app.exec();
         } else {
             qCritical() << "not starting again, only one application instance allowed";
             return 1;

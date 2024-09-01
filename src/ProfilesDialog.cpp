@@ -102,11 +102,12 @@ void ProfilesDialog::createTrayIcon()
             this,
             [this](QSystemTrayIcon::ActivationReason reason) {
                 if (QSystemTrayIcon::Trigger == reason) {
-// Do not disable scroll area and buttons for debug builds.
-#ifndef QT_DEBUG
-                    this->ui->saProfiles->setDisabled(true);
-                    this->ui->pbNew->setDisabled(true);
-#endif
+                    // Do not disable scroll area and buttons in debug mode.
+                    if (not qApp->property("debug").toBool()) {
+                        this->ui->saProfiles->setDisabled(true);
+                        this->ui->pbNew->setDisabled(true);
+                    }
+
                     this->ui->lblDescription->setText(
                         tr("The following profiles have been found."));
                     this->show();

@@ -3,6 +3,7 @@
  * SPDX-License-Identifier: GPL-2.0-or-later
  */
 #include "AWSCredentials.hpp"
+#include <QApplication>
 #include <QDir>
 #include <QStandardPaths>
 #include <QTemporaryFile>
@@ -60,7 +61,7 @@ bool AWSCredentials::setProfileFromText(const QString &profile, const QString &t
         QTextStream textStream(&tempFile);
         textStream << text;
         tempFile.close();
-        qDebug() << "tempfile" << tempFile.fileName();
+        qDebug() << "tempfile is" << tempFile.fileName();
 
         auto tempSettings = QSettings(tempFile.fileName(), QSettings::IniFormat);
         auto accessKey = tempSettings.value("default/aws_access_key").toString();
@@ -70,6 +71,10 @@ bool AWSCredentials::setProfileFromText(const QString &profile, const QString &t
         if (accessKey.isEmpty() or secretAccessKey.isEmpty() or sessionToken.isEmpty()) {
             qCritical() << "unable to update profile " << profile << ":" << accessKey.length()
                         << secretAccessKey.length() << sessionToken.length();
+            // Do not remove temporary file in debug mode.
+            if (qApp->property("debug").toBool()) {
+                tempFile.setAutoRemove(false);
+            }
             return false;
         }
 
