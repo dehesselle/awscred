@@ -16,6 +16,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 find_package(QT NAMES Qt6 Qt5 REQUIRED COMPONENTS Widgets LinguistTools)
 find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets LinguistTools)
 
+set(CMAKE_CXX_FLAGS "-DQT_MESSAGELOGCONTEXT")
+
 set(TS_FILES i18n/awscred_de_DE.ts)
 
 set(PROJECT_SOURCES

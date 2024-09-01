@@ -60,6 +60,7 @@ bool AWSCredentials::setProfileFromText(const QString &profile, const QString &t
         QTextStream textStream(&tempFile);
         textStream << text;
         tempFile.close();
+        qDebug() << "tempfile" << tempFile.fileName();
 
         auto tempSettings = QSettings(tempFile.fileName(), QSettings::IniFormat);
         auto accessKey = tempSettings.value("default/aws_access_key").toString();
@@ -67,7 +68,8 @@ bool AWSCredentials::setProfileFromText(const QString &profile, const QString &t
         auto sessionToken = tempSettings.value("default/aws_session_token").toString();
 
         if (accessKey.isEmpty() or secretAccessKey.isEmpty() or sessionToken.isEmpty()) {
-            qCritical() << "unable to update profile " << profile;
+            qCritical() << "unable to update profile " << profile << ":" << accessKey.length()
+                        << secretAccessKey.length() << sessionToken.length();
             return false;
         }
 
@@ -77,7 +79,7 @@ bool AWSCredentials::setProfileFromText(const QString &profile, const QString &t
         sync();
         return true;
     } else {
-        qCritical() << "failed to open temporary file";
+        qCritical() << "failed to create a temporary file";
         return false;
     }
 }

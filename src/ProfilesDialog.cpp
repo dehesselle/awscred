@@ -46,6 +46,7 @@ void ProfilesDialog::populate()
     // populate with buttons
     auto credentials = AWSCredentials();
     foreach (QString profile, credentials.getProfiles()) {
+        qDebug() << "profile found:" << profile;
         addButton(profile);
     }
 }
@@ -139,7 +140,7 @@ bool ProfilesDialog::updateProfile(const QString &profile)
 
 void ProfilesDialog::parseClipboard()
 {
-    qDebug() << __FUNCTION__;
+    qDebug() << "parsing clipboard";
     auto text = QApplication::clipboard()->text();
 
     if (AWSCredentials::containsCredentials(text)) {

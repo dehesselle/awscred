@@ -12,6 +12,7 @@
 #include <QStandardPaths>
 #include <QSystemTrayIcon>
 #include <QTranslator>
+#include <QtDebug>
 #include <private/qguiapplication_p.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -43,9 +44,11 @@ int main(int argc, char *argv[])
 {
     ORIGINAL_HANDLER = qInstallMessageHandler(logToFile);
     qSetMessagePattern(MESSAGE_PATTERN);
-    qInfo("begin log");
+    qInfo() << "begin log";
 
 // Disable debug logging for non-debug builds.
+// Override with
+//      QT_LOGGING_RULES="default.debug=true" /path/to/awscred
 #ifndef QT_DEBUG
     QLoggingCategory::setFilterRules("*.debug=false\n");
 #endif
@@ -77,15 +80,15 @@ int main(int argc, char *argv[])
             ProfilesDialog w;
             return a.exec();
         } else {
-            qCritical("only one application instance allowed");
+            qCritical() << "not starting again, only one application instance allowed";
             return 1;
         }
     } else {
+        qCritical() << "system tray not available";
         QMessageBox::critical(nullptr,
                               QObject::tr("system tray"),
                               QObject::tr("System tray not found!"),
                               QMessageBox::Close);
-        qCritical("system tray not found");
         return 1;
     }
 }
