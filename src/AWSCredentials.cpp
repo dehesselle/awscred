@@ -5,6 +5,7 @@
 #include "AWSCredentials.hpp"
 #include <QApplication>
 #include <QDir>
+#include <QRegularExpression>
 #include <QStandardPaths>
 #include <QTemporaryFile>
 #include <QTextStream>
@@ -91,5 +92,15 @@ bool AWSCredentials::setProfileFromText(const QString &profile, const QString &t
 
 bool AWSCredentials::containsCredentials(const QString &text)
 {
-    return text.contains("aws_secret_access_key=");
+    // step 1: simple string check for one mandatory string
+    if (text.contains("aws_secret_access_key=")) {
+        // step 2: use a regex to check for the whole (multiline-) string
+        QRegularExpression regex;
+        regex.setPatternOptions(QRegularExpression::MultilineOption);
+        regex.setPatternOptions(QRegularExpression::DotMatchesEverythingOption);
+        regex.setPattern(
+            R"(\[default\].aws_access_key_id=.+aws_secret_access_key=.+aws_session_token=.+)");
+        return regex.globalMatch(text).hasNext();
+    }
+    return false;
 }
