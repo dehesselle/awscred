@@ -54,6 +54,12 @@ int main(int argc, char *argv[])
             app.setProperty("debug", true);
         } else {
             app.setProperty("debug", false);
+        }
+// Always run in debug mode for debug builds.
+#ifdef QT_DEBUG
+        app.setProperty("debug", true);
+#endif
+        if (not app.property("debug").toBool()) {
             // Disable debug logging.
             QLoggingCategory::setFilterRules("default.debug=false\n");
             // Disable logging to console.
