@@ -21,6 +21,10 @@ It will be pre-populated with buttons of your existing profiles, so you can upda
 
 While this has been created with the excellent [Qt Framework & Development Tools](https://www.qt.io) and is cross-platform, it is specifically targeted at Windows.
 
+## download
+
+Downloads for Windows are available in the [Releases](https://github.com/dehesselle/awscred/releases) section.
+
 ## license
 
 [GPL-2.0-or-later](LICENSE)
