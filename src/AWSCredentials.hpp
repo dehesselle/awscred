@@ -5,8 +5,8 @@
 #ifndef AWSCREDENTIALS_HPP
 #define AWSCREDENTIALS_HPP
 
-#include <QSettings>
 #include <QStringList>
+#include "IniFile.hpp"
 
 class AWSCredentials : public QObject
 {
@@ -15,9 +15,6 @@ class AWSCredentials : public QObject
 public:
     AWSCredentials(QObject *parent = nullptr);
 
-    void sync();
-
-    int count();
     QStringList getProfiles();
     static bool containsCredentials(const QString &text);
 
@@ -27,7 +24,7 @@ public:
     bool setProfileFromText(const QString &profile, const QString &text);
 
 private:
-    QSettings *iniFile;
+    IniFile *iniFile;
 };
 
 #endif // AWSCREDENTIALS_HPP

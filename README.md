@@ -27,4 +27,5 @@ Downloads for Windows are available in the [Releases](https://github.com/dehesse
 
 ## license
 
-[GPL-2.0-or-later](LICENSE)
+This work is licensed under [`GPL-2.0-or-later`](LICENSE).  
+Using [Leksys' INI Parser](https://github.com/Lek-sys/LeksysINI) licensed under [`MIT`](https://github.com/Lek-sys/LeksysINI/blob/69a2ad1/LICENSE).

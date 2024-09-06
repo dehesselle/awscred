@@ -21,38 +21,27 @@ AWSCredentials::AWSCredentials(QObject *parent)
     else
         qDebug() << "no credentials file";
 
-    iniFile = new QSettings(awsDir.filePath("credentials"), QSettings::IniFormat, this);
-    sync();
-}
-
-void AWSCredentials::sync()
-{
-    iniFile->sync();
-}
-
-int AWSCredentials::count()
-{
-    return iniFile->childGroups().count();
+    iniFile = new IniFile(awsDir.filePath("credentials"), this);
 }
 
 QStringList AWSCredentials::getProfiles()
 {
-    return iniFile->childGroups();
+    return iniFile->getSections();
 }
 
 void AWSCredentials::setAccessKeyId(const QString &profile, const QString &accessKeyId)
 {
-    iniFile->setValue(profile + "/aws_access_key_id", accessKeyId);
+    iniFile->setValue(profile, "aws_access_key_id", accessKeyId);
 }
 
 void AWSCredentials::setSecretAccessKey(const QString &profile, const QString &secretAccessKey)
 {
-    iniFile->setValue(profile + "/aws_secret_access_key", secretAccessKey);
+    iniFile->setValue(profile, "aws_secret_access_key", secretAccessKey);
 }
 
 void AWSCredentials::setSessionToken(const QString &profile, const QString &sessionToken)
 {
-    iniFile->setValue(profile + "/aws_session_token", sessionToken);
+    iniFile->setValue(profile, "aws_session_token", sessionToken);
 }
 
 bool AWSCredentials::setProfileFromText(const QString &profile, const QString &text)
@@ -64,10 +53,10 @@ bool AWSCredentials::setProfileFromText(const QString &profile, const QString &t
         tempFile.close();
         qDebug() << "tempfile is" << tempFile.fileName();
 
-        auto tempSettings = QSettings(tempFile.fileName(), QSettings::IniFormat);
-        auto accessKeyId = tempSettings.value("default/aws_access_key_id").toString();
-        auto secretAccessKey = tempSettings.value("default/aws_secret_access_key").toString();
-        auto sessionToken = tempSettings.value("default/aws_session_token").toString();
+        auto tempIni = IniFile(tempFile.fileName());
+        auto accessKeyId = tempIni.value("default", "aws_access_key_id");
+        auto secretAccessKey = tempIni.value("default", "aws_secret_access_key");
+        auto sessionToken = tempIni.value("default", "aws_session_token");
 
         if (accessKeyId.isEmpty() or secretAccessKey.isEmpty() or sessionToken.isEmpty()) {
             qCritical() << "unable to update profile " << profile << ":" << accessKeyId.length()
@@ -82,7 +71,6 @@ bool AWSCredentials::setProfileFromText(const QString &profile, const QString &t
         setAccessKeyId(profile, accessKeyId);
         setSecretAccessKey(profile, secretAccessKey);
         setSessionToken(profile, sessionToken);
-        sync();
         return true;
     } else {
         qCritical() << "failed to create a temporary file";
