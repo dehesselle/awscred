@@ -6,6 +6,7 @@
 #include <QAction>
 #include <QClipboard>
 #include <QFont>
+#include <QFontDatabase>
 #include <QIcon>
 #include <QInputDialog>
 #include <QMenu>
@@ -56,7 +57,10 @@ void ProfilesDialog::addButton(const QString &profile)
     QPushButton *button = new QPushButton(profile, this);
 
     button->setObjectName(profile);
-    button->setFont(QFont("Monospace", 20));
+    QFont font = QFontDatabase::systemFont(QFontDatabase::FixedFont);
+    font.setPointSize(20);
+    font.setBold(true);
+    button->setFont(font);
     button->setMinimumHeight(80);
 
     connect(button, &QPushButton::clicked, this, [this, button]() {
