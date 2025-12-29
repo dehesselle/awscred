@@ -49,11 +49,11 @@ void ProfilesDialog::populate()
     auto credentials = AWSCredentials();
     foreach (QString profile, credentials.getProfiles()) {
         qDebug() << "profile found:" << profile;
-        addButton(profile);
+        addProfile(profile);
     }
 }
 
-void ProfilesDialog::addButton(const QString &profile)
+void ProfilesDialog::addProfile(const QString &profile)
 {
     QPushButton *button = new QPushButton(profile, this);
 
@@ -101,16 +101,15 @@ void ProfilesDialog::createTrayIcon()
     systrayIconMenu->addAction(quitAction);
 
     // click systray icon to show dialog in read-only mode
-    // (read-only is for non-debug builds only)
     connect(systrayIcon,
             &QSystemTrayIcon::activated,
             this,
             [this](QSystemTrayIcon::ActivationReason reason) {
                 if (QSystemTrayIcon::Trigger == reason) {
-                    // Do not disable scroll area and buttons in debug mode.
+                    // disable editing capabilities unless we're in debug mode
                     if (not qApp->property("debug").toBool()) {
-                        this->ui->saProfiles->setDisabled(true);
-                        this->ui->pbNew->setDisabled(true);
+                    this->setEnabledForAllProfiles(false);
+                    this->ui->pbNew->setEnabled(false);
                     }
 
                     this->ui->lblDescription->setText(
@@ -151,8 +150,8 @@ void ProfilesDialog::parseClipboard()
 
     if (AWSCredentials::containsCredentials(text)) {
         populate();
-        ui->saProfiles->setDisabled(false);
-        ui->pbNew->setDisabled(false);
+        setEnabledForAllProfiles(true);
+        ui->pbNew->setEnabled(true);
         ui->lblDescription->setText(tr("Which profile do you want to update?"));
         show();
         activateWindow();
@@ -179,5 +178,12 @@ void ProfilesDialog::on_pbNew_clicked()
         if (updateProfile(profile)) {
             populate();
         }
+    }
+}
+
+void ProfilesDialog::setEnabledForAllProfiles(const bool &isEnabled)
+{
+    for (auto button : ui->saProfiles->widget()->findChildren<QPushButton *>()) {
+        button->setEnabled(isEnabled);
     }
 }

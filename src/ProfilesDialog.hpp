@@ -23,7 +23,7 @@ public:
     ~ProfilesDialog();
 
     void populate();
-    void addButton(const QString &profile);
+    void addProfile(const QString &profile);
 
 public slots:
     bool updateProfile(const QString &profile);
@@ -36,6 +36,7 @@ private slots:
 
 private:
     void createTrayIcon();
+    void setEnabledForAllProfiles(const bool &isEnabled);
 
     Ui::ProfilesDialog *ui;
 };
