@@ -24,6 +24,8 @@ set(CMAKE_CXX_FLAGS "-DQT_MESSAGELOGCONTEXT")
 
 set(TS_FILES i18n/awscred_de_DE.ts)
 
+set(WINDOWS_RESOURCES "${CMAKE_CURRENT_SOURCE_DIR}/res/awscred.rc")
+
 set(PROJECT_SOURCES src/main.cpp src/ProfilesDialog.cpp src/ProfilesDialog.hpp
                     src/ProfilesDialog.ui ${TS_FILES})
 
@@ -36,7 +38,8 @@ if(${QT_VERSION_MAJOR} GREATER_EQUAL 6)
     src/AWSCredentials.hpp
     res/awscred.qrc
     src/IniFile.hpp
-    src/IniFile.cpp)
+    src/IniFile.cpp
+    ${WINDOWS_RESOURCES})
   # Define target properties for Android with Qt 6 as: set_property(TARGET
   # awscred APPEND PROPERTY QT_ANDROID_PACKAGE_SOURCE_DIR
   # ${CMAKE_CURRENT_SOURCE_DIR}/android) For more information, see
