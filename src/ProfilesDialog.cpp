@@ -26,6 +26,7 @@ ProfilesDialog::ProfilesDialog(QWidget *parent)
     setWindowIcon(QIcon(QPixmap(":/icon.svg")));
     populate();
     createTrayIcon();
+    setWindowFlags(this->windowFlags() | Qt::WindowStaysOnTopHint);
     connect(QApplication::clipboard(),
             &QClipboard::dataChanged,
             this,
