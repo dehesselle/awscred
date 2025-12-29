@@ -16,6 +16,8 @@ AWSCredentials::AWSCredentials(QObject *parent)
 {
     auto awsDir = QDir(QStandardPaths::writableLocation(QStandardPaths::HomeLocation)
                      + "/.aws");
+    awsDir.mkpath(awsDir.path());
+
     if (awsDir.exists("credentials"))
         qDebug() << "credentials file found in" << awsDir.path();
     else
