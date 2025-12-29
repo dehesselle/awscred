@@ -25,7 +25,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-artifact@v6
         with:
-          name: awscred
+          name: awscred_msvc
           path: build/Release/
 
   ################################################################################
@@ -38,51 +38,97 @@ jobs:
       - name: Download artifact
         uses: actions/download-artifact@v7
         with:
-          name: awscred
+          name: awscred_msvc
           path: awscred
 
       - name: Create release asset
-        run: zip -r awscred.zip awscred
+        run: zip -r awscred_msvc.zip awscred
 
       - name: Create release
         uses: ncipollo/release-action@v1
         with:
-          artifacts: awscred.zip
+          artifacts: awscred_msvc.zip
           token: ${{ secrets.GITHUB_TOKEN }}
           draft: true
-################################################################################
+  ################################################################################
 
-# The purpose of this job is to build a static binary, but this goal is
-# unachievable at the moment due to issues with qt6-static not being fully
-# static.
-# https://github.com/msys2/MINGW-packages/issues/18966
+  # The purpose of this job is to build a static binary, but this goal is
+  # unachievable at the moment due to issues with qt6-static not being fully
+  # static.
+  # https://github.com/msys2/MINGW-packages/issues/18966
+  #
+  # Although this issue has been closed, the problem persists:
+  #  ntldd awscred.exe
+  #       ADVAPI32.dll => C:\Windows\SYSTEM32\ADVAPI32.dll (0x0000023b7acf0000)
+  #       AUTHZ.dll => C:\Windows\SYSTEM32\AUTHZ.dll (0x0000023b7c680000)
+  #       comdlg32.dll => C:\Windows\SYSTEM32\COMDLG32.dll (0x0000023b7d1a0000)
+  #       d3d11.dll => C:\Windows\SYSTEM32\d3d11.dll (0x0000023b7ca20000)
+  #       d3d12.dll => C:\Windows\SYSTEM32\d3d12.dll (0x0000023b7d070000)
+  #       d3d9.dll => C:\Windows\SYSTEM32\d3d9.dll (0x0000023b7acf0000)
+  #       dwmapi.dll => C:\Windows\SYSTEM32\dwmapi.dll (0x0000023b7d610000)
+  #       DWrite.dll => C:\Windows\SYSTEM32\DWrite.dll (0x0000023b7dcd0000)
+  #       dxgi.dll => C:\Windows\SYSTEM32\dxgi.dll (0x0000023b7cc90000)
+  #       GDI32.dll => C:\Windows\SYSTEM32\GDI32.dll (0x0000023b7d3c0000)
+  #       IMM32.dll => C:\Windows\SYSTEM32\IMM32.dll (0x0000023b7d200000)
+  #       KERNEL32.dll => C:\Windows\SYSTEM32\KERNEL32.dll (0x0000023b7d7b0000)
+  #       NETAPI32.dll => C:\Windows\SYSTEM32\NETAPI32.dll (0x0000023b7c070000)
+  #       ntdll.dll => C:\Windows\SYSTEM32\ntdll.dll (0x0000023b7ae60000)
+  #       ole32.dll => C:\Windows\SYSTEM32\ole32.dll (0x0000023b7d610000)
+  #       OLEAUT32.dll => C:\Windows\SYSTEM32\OLEAUT32.dll (0x0000023b7bb00000)
+  #       SETUPAPI.dll => C:\Windows\SYSTEM32\SETUPAPI.dll (0x0000023b7d690000)
+  #       SHCORE.dll => C:\Windows\SYSTEM32\SHCORE.dll (0x0000023b7cae0000)
+  #       SHELL32.dll => C:\Windows\SYSTEM32\SHELL32.dll (0x0000023b7ca10000)
+  #       SHLWAPI.dll => C:\Windows\SYSTEM32\SHLWAPI.dll (0x0000023b7d170000)
+  #       USER32.dll => C:\Windows\SYSTEM32\USER32.dll (0x0000023b7d1f0000)
+  #       USERENV.dll => C:\Windows\SYSTEM32\USERENV.dll (0x0000023b7b950000)
+  #       UxTheme.dll => C:\Windows\SYSTEM32\UxTheme.dll (0x0000023b7d690000)
+  #       VERSION.dll => C:\Windows\SYSTEM32\VERSION.dll (0x0000023b7d1e0000)
+  #       WINMM.dll => C:\Windows\SYSTEM32\WINMM.dll (0x0000023b7d170000)
+  #       WS2_32.dll => C:\Windows\SYSTEM32\WS2_32.dll (0x0000023b7b410000)
+  #       WTSAPI32.dll => C:\Windows\SYSTEM32\WTSAPI32.dll (0x0000023b7d8b0000)
+  #  >>   libb2-1.dll => C:\msys2\ucrt64\bin\libb2-1.dll (0x0000023b77b40000)
+  #  >>   libfreetype-6.dll => C:\msys2\ucrt64\bin\libfreetype-6.dll (0x0000023b7acf0000)
+  #  >>   libharfbuzz-0.dll => C:\msys2\ucrt64\bin\libharfbuzz-0.dll (0x0000023b7adc0000)
+  #  >>   libjpeg-8.dll => C:\msys2\ucrt64\bin\libjpeg-8.dll (0x0000023b7acf0000)
+  #  >>   libpcre2-16-0.dll => C:\msys2\ucrt64\bin\libpcre2-16-0.dll (0x0000023b7acf0000)
+  #  >>   libpng16-16.dll => C:\msys2\ucrt64\bin\libpng16-16.dll (0x0000023b7adc0000)
+  #  >>   libtiff-6.dll => C:\msys2\ucrt64\bin\libtiff-6.dll (0x0000023b7acf0000)
+  #  >>   libwebp-7.dll => C:\msys2\ucrt64\bin\libwebp-7.dll (0x0000023b7ad90000)
+  #  >>   libwebpdemux-2.dll => C:\msys2\ucrt64\bin\libwebpdemux-2.dll (0x0000023b77b40000)
+  #  >>   libwebpmux-3.dll => C:\msys2\ucrt64\bin\libwebpmux-3.dll (0x0000023b7acf0000)
+  #  >>   zlib1.dll => C:\msys2\ucrt64\bin\zlib1.dll (0x0000023b7ae00000)
 
-# msys2:
-#   runs-on: windows-2022
-#   steps:
+  # msys2:
+  #   runs-on: windows-2022
+  #   steps:
+  #     - name: Checkout repository
+  #       uses: actions/checkout@v6
 
-#     - name: Checkout repository
-#       uses: actions/checkout@v6
+  #     - name: Install Qt
+  #       uses: msys2/setup-msys2@v2
+  #       with:
+  #         msystem: UCRT64
+  #         pacboy: |
+  #           cmake:p
+  #           gcc:p
+  #           harfbuzz:p
+  #           libmng:p
+  #           libpng:p
+  #           libwebp:p
+  #           ninja:p
+  #           pcre2:p
+  #           qt6-static:p
 
-#     - name: Install Qt
-#       uses: msys2/setup-msys2@v2
-#       with:
-#         msystem: UCRT64
-#         pacboy: |
-#           cmake:p
-#           gcc:p
-#           harfbuzz:p
-#           libmng:p
-#           libpng:p
-#           libwebp:p
-#           ninja:p
-#           pcre2:p
-#           qt6-static:p
+  #     - name: Build application
+  #       shell: msys2 {0}
+  #       env:
+  #         MSYSTEM: UCRT64
+  #       run: |
+  #         cmake -S . -B build -DCMAKE_PREFIX_PATH=/ucrt64/qt6-static -DQT_DEBUG_FIND_PACKAGE=ON
+  #         cmake --build build
 
-#     - name: Build application
-#       shell: msys2 {0}
-#       env:
-#         MSYSTEM: UCRT64
-#       run: |
-#         cmake -S . -B build -DCMAKE_PREFIX_PATH=/ucrt64/qt6-static -DQT_DEBUG_FIND_PACKAGE=ON
-#         cmake --build build
+  #     - name: Upload artifact
+  #       uses: actions/upload-artifact@v6
+  #       with:
+  #         name: awscred_msys2
+  #         path: build/awscred.exe
