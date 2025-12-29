@@ -47,7 +47,7 @@ void ProfilesDialog::populate()
 
     // populate with buttons
     auto credentials = AWSCredentials();
-    foreach (QString profile, credentials.getProfiles()) {
+    for (auto profile : credentials.getProfiles()) {
         qDebug() << "profile found:" << profile;
         addProfile(profile);
     }
