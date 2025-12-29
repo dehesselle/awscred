@@ -2,20 +2,18 @@ name: Build
 on:
   push:
 jobs:
-
-################################################################################
+  ################################################################################
 
   msvc:
     runs-on: windows-2022
     steps:
-
       - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Install Qt
         uses: jurplel/install-qt-action@v4
         with:
-          version: 6.7.2
+          version: 6.10.1
           setup-python: false
 
       - name: Build application
@@ -30,63 +28,61 @@ jobs:
           name: awscred
           path: build/Release/
 
-################################################################################
+  ################################################################################
 
   release:
     runs-on: ubuntu-latest
     needs: msvc
     if: startsWith(github.ref, 'refs/tags/v')
     steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: awscred
+          path: awscred
 
-    - name: Download artifact
-      uses: actions/download-artifact@v4
-      with:
-        name: awscred
-        path: awscred
+      - name: Create release asset
+        run: zip -r awscred.zip awscred
 
-    - name: Create release asset
-      run: zip -r awscred.zip awscred
-
-    - name: Create release
-      uses: ncipollo/release-action@v1
-      with:
-        artifacts: awscred.zip
-        token: ${{ secrets.GITHUB_TOKEN }}
-        draft: true
-
+      - name: Create release
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: awscred.zip
+          token: ${{ secrets.GITHUB_TOKEN }}
+          draft: true
 ################################################################################
 
-  # The purpose of this job is to build a static binary, but this goal is
-  # unachievable at the moment due to issues with qt6-static not being fully
-  # static.
-  # https://github.com/msys2/MINGW-packages/issues/18966
+# The purpose of this job is to build a static binary, but this goal is
+# unachievable at the moment due to issues with qt6-static not being fully
+# static.
+# https://github.com/msys2/MINGW-packages/issues/18966
 
-  # msys2:
-  #   runs-on: windows-2022
-  #   steps:
+# msys2:
+#   runs-on: windows-2022
+#   steps:
 
-  #     - name: Checkout repository
-  #       uses: actions/checkout@v4
+#     - name: Checkout repository
+#       uses: actions/checkout@v4
 
-  #     - name: Install Qt
-  #       uses: msys2/setup-msys2@v2
-  #       with:
-  #         msystem: UCRT64
-  #         pacboy: |
-  #           cmake:p
-  #           gcc:p
-  #           harfbuzz:p
-  #           libmng:p
-  #           libpng:p
-  #           libwebp:p
-  #           ninja:p
-  #           pcre2:p
-  #           qt6-static:p
+#     - name: Install Qt
+#       uses: msys2/setup-msys2@v2
+#       with:
+#         msystem: UCRT64
+#         pacboy: |
+#           cmake:p
+#           gcc:p
+#           harfbuzz:p
+#           libmng:p
+#           libpng:p
+#           libwebp:p
+#           ninja:p
+#           pcre2:p
+#           qt6-static:p
 
-  #     - name: Build application
-  #       shell: msys2 {0}
-  #       env:
-  #         MSYSTEM: UCRT64
-  #       run: |
-  #         cmake -S . -B build -DCMAKE_PREFIX_PATH=/ucrt64/qt6-static -DQT_DEBUG_FIND_PACKAGE=ON
-  #         cmake --build build
+#     - name: Build application
+#       shell: msys2 {0}
+#       env:
+#         MSYSTEM: UCRT64
+#       run: |
+#         cmake -S . -B build -DCMAKE_PREFIX_PATH=/ucrt64/qt6-static -DQT_DEBUG_FIND_PACKAGE=ON
+#         cmake --build build
