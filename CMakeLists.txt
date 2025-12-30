@@ -27,6 +27,9 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS Widgets LinguistTools
 
 set(CMAKE_CXX_FLAGS "-DQT_MESSAGELOGCONTEXT")
 
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/src/version.hpp.in
+               ${CMAKE_CURRENT_SOURCE_DIR}/src/version.hpp @ONLY)
+
 set(TS_FILES i18n/awscred_de_DE.ts)
 
 set(WINDOWS_RESOURCES "${CMAKE_CURRENT_SOURCE_DIR}/res/awscred.rc")
@@ -41,6 +44,7 @@ set(PROJECT_SOURCES
     res/awscred.qrc
     src/IniFile.hpp
     src/IniFile.cpp
+    src/version.hpp
     ${TS_FILES}
     ${WINDOWS_RESOURCES})
 

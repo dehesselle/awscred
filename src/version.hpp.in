@@ -1,0 +1,12 @@
+/* SPDX-FileCopyrightText: 2025 René de Hesselle <dehesselle@web.de>
+ *
+ * SPDX-License-Identifier: GPL-2.0-or-later
+ */
+#ifndef VERSION_HPP_IN
+#define VERSION_HPP_IN
+
+#include <QString>
+
+const QString PROJECT_VERSION("@PROJECT_VERSION@");
+
+#endif // VERSION_HPP_IN

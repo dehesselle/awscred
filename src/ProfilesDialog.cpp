@@ -17,6 +17,7 @@
 #include <QtDebug>
 #include "AWSCredentials.hpp"
 #include "src/ui_ProfilesDialog.h"
+#include "version.hpp"
 
 ProfilesDialog::ProfilesDialog(QWidget *parent)
     : QDialog(parent)
@@ -73,14 +74,17 @@ void ProfilesDialog::addProfile(const QString &profile)
 void ProfilesDialog::showAboutDialog()
 {
     QMessageBox::about(this,
-                       "AWS Credential Helper",
-                       "This tool monitors your clipboard for AWS credentials and offers\n"
-                       "to update/create a profile in your ~/.aws/credentials file.\n\n"
-                       "Licensed under GPL-2.0-or-later.\n"
-                       "https://github.com/dehesselle/awscred\n\n"
-                       "Created using Qt.\n"
-                       "https://qt.io"
-                       );
+                       "About",
+                       QString("AWS Credential Helper, version %1\n\n").arg(PROJECT_VERSION)
+                           + "This tool monitors your clipboard for AWS credentials and offers\n"
+                             "to update/create a profile in your ~/.aws/credentials file.\n\n"
+                             "https://github.com/dehesselle/awscred\n"
+                             "Licensed under GPL-2.0-or-later.\n");
+}
+
+void ProfilesDialog::showAboutQtDialog()
+{
+    QMessageBox::aboutQt(this);
 }
 
 void ProfilesDialog::createTrayIcon()
@@ -92,6 +96,12 @@ void ProfilesDialog::createTrayIcon()
     QAction *aboutAction = new QAction(tr("About"), this);
     connect(aboutAction, &QAction::triggered, this, &ProfilesDialog::showAboutDialog);
     systrayIconMenu->addAction(aboutAction);
+
+    QAction *aboutQtAction = new QAction(tr("About Qt"), this);
+    connect(aboutQtAction, &QAction::triggered, this, &ProfilesDialog::showAboutQtDialog);
+    systrayIconMenu->addAction(aboutQtAction);
+
+    systrayIconMenu->addAction(systrayIconMenu->addSeparator());
 
     QAction *quitAction = new QAction(tr("&Quit"), this);
     connect(quitAction, &QAction::triggered, qApp, []() {

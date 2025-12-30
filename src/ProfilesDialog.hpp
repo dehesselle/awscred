@@ -7,6 +7,7 @@
 
 #include <QAction>
 #include <QDialog>
+#include "version.hpp"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -29,6 +30,7 @@ public slots:
     bool updateProfile(const QString &profile);
     void parseClipboard();
     void showAboutDialog();
+    void showAboutQtDialog();
 
 private slots:
     void on_pbClose_clicked();

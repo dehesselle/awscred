@@ -1,3 +1,7 @@
 # QT Creator
 .qtcreator
 build
+
+# generated sources
+src/version.hpp
+
