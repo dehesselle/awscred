@@ -7,23 +7,28 @@
 
 #include <QObject>
 #include <QString>
-#include <QStringList>
 #include "iniparser.hpp"
 
 class IniFile : public QObject
 {
     Q_OBJECT
 public:
-    explicit IniFile(const QString &filename, QObject *parent = nullptr);
+    IniFile(QObject *parent = nullptr);
+    IniFile(const QString &fileName, QObject *parent = nullptr);
     ~IniFile();
 
     QStringList getSections();
     void setValue(const QString &section, const QString &key, const QString &value);
     QString value(const QString &section, const QString &key);
 
+    void load(const QString &fileName);
+    void save(QString fileName = "");
+
+    static IniFile *fromString(const QString &text, QObject *parent = nullptr);
+
 private:
-    INI::File ini;
-    QString filename;
+    INI::File parser;
+    QString fileName;
 };
 
 #endif // INIFILE_HPP

@@ -48,36 +48,21 @@ void AWSCredentials::setSessionToken(const QString &profile, const QString &sess
 
 bool AWSCredentials::setProfileFromText(const QString &profile, const QString &text)
 {
-    auto tempFile = QTemporaryFile();
-    if (tempFile.open()) {
-        QTextStream textStream(&tempFile);
-        textStream << text;
-        tempFile.close();
-        qDebug() << "tempfile is" << tempFile.fileName();
+    auto ini = IniFile::fromString(text, this);
+    auto accessKeyId = ini->value("default", "aws_access_key_id");
+    auto secretAccessKey = ini->value("default", "aws_secret_access_key");
+    auto sessionToken = ini->value("default", "aws_session_token");
 
-        auto tempIni = IniFile(tempFile.fileName());
-        auto accessKeyId = tempIni.value("default", "aws_access_key_id");
-        auto secretAccessKey = tempIni.value("default", "aws_secret_access_key");
-        auto sessionToken = tempIni.value("default", "aws_session_token");
-
-        if (accessKeyId.isEmpty() or secretAccessKey.isEmpty() or sessionToken.isEmpty()) {
-            qCritical() << "unable to update profile " << profile << ":" << accessKeyId.length()
-                        << secretAccessKey.length() << sessionToken.length();
-            // Do not remove temporary file in debug mode.
-            if (qApp->property("debug").toBool()) {
-                tempFile.setAutoRemove(false);
-            }
-            return false;
-        }
-
-        setAccessKeyId(profile, accessKeyId);
-        setSecretAccessKey(profile, secretAccessKey);
-        setSessionToken(profile, sessionToken);
-        return true;
-    } else {
-        qCritical() << "failed to create a temporary file";
+    if (accessKeyId.isEmpty() or secretAccessKey.isEmpty() or sessionToken.isEmpty()) {
+        qCritical() << "unable to update profile " << profile << ":" << accessKeyId.length()
+                    << secretAccessKey.length() << sessionToken.length();
         return false;
     }
+
+    setAccessKeyId(profile, accessKeyId);
+    setSecretAccessKey(profile, secretAccessKey);
+    setSessionToken(profile, sessionToken);
+    return true;
 }
 
 bool AWSCredentials::containsCredentials(const QString &text)
