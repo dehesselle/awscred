@@ -62,7 +62,7 @@ void ProfilesDialog::addProfile(const QString &profile)
     font.setPointSize(20);
     font.setBold(true);
     button->setFont(font);
-    button->setMinimumHeight(80);
+    button->setMinimumHeight(60);
 
     connect(button, &QPushButton::clicked, this, [this, button]() {
         updateProfile(button->objectName());
