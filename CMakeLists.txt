@@ -6,7 +6,7 @@ cmake_minimum_required(VERSION 3.16)
 
 project(
   awscred
-  VERSION 0.4
+  VERSION 0.4.1
   LANGUAGES CXX)
 
 set(CMAKE_AUTOUIC ON)
