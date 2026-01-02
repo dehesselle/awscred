@@ -1330,12 +1330,12 @@ namespace INI
                     continue;
                 }
                 // Handle multiline strings
-                if (char_is_one_of(line.at(line.size()-1),INI_MULTILINE_CHARS))
+                /*if (char_is_one_of(line.at(line.size()-1),INI_MULTILINE_CHARS))
                 {
                     prev_line = prev_line + line.substr(0,line.size()-1);
                     continue;
                 }
-                else if (!prev_line.empty())
+                else*/ if (!prev_line.empty())
                 {
                     line = prev_line + line;
                     prev_line.clear();
