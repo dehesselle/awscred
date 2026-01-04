@@ -45,6 +45,11 @@ set(PROJECT_SOURCES
 
 qt_add_executable(awscred WIN32 ${PROJECT_SOURCES} ${WINDOWS_RESOURCES})
 
+if($ENV{GITHUB_JOB} STREQUAL "msvc-static")
+  set_property(TARGET awscred PROPERTY MSVC_RUNTIME_LIBRARY
+                                       "MultiThreaded$<$<CONFIG:Debug>:Debug>")
+endif()
+
 qt_add_translations(TARGETS awscred MERGE_QT_TRANSLATIONS TS_FILES
                     i18n/awscred_de_DE.ts)
 
@@ -57,5 +62,3 @@ install(
   TARGETS awscred
   LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}
   RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR})
-
-qt_finalize_executable(awscred)
