@@ -68,13 +68,8 @@ int main(int argc, char *argv[])
     }
 
     QTranslator translator;
-    const QStringList uiLanguages = QLocale::system().uiLanguages();
-    for (const QString &locale : uiLanguages) {
-        const QString baseName = "awscred_" + QLocale(locale).name();
-        if (translator.load(":/i18n/" + baseName)) {
-            app.installTranslator(&translator);
-            break;
-        }
+    if (translator.load(QLocale::system(), "awscred", "_", ":/i18n")) {
+        app.installTranslator(&translator);
     }
 
     if (QSystemTrayIcon::isSystemTrayAvailable()) {
